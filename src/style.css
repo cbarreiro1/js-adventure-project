@@ -1,7 +1,11 @@
+body {
+    font-family: "Audiowide"
+}
+
 #top-container {
     background-color: rgb(37, 32, 32);
     color: rgb(231, 225, 225);
-    padding: 8px;
+    padding: 16px;
 }
 
 #mid-container {
@@ -13,5 +17,31 @@
 #bottom-container {
     background-color: rgb(19, 19, 69);
     color: rgb(231, 225, 225);
-    padding: 64px;
+    padding: 32px;
+    padding-top: 16px !important;
+}
+
+#message-area {
+    padding: 0 0 0 64px
+}
+
+#room-exits {
+    margin-top: 24px;
+    display: flex;
+    gap: 16px;
+}
+
+.exit {
+    border-radius: 8px;
+    border:rgb(19, 19, 69) solid 4px;
+    padding: 4px;
+    text-decoration: none;
+    color: rgb(37, 32, 32);
+    font-weight: 600;
+    box-shadow: 2px 4px 10px 1px rgba(0,0,0,0.3);
+    transition: transform ease 0.2s
+}
+
+.exit:hover {
+    transform: scale(1.1);
 }

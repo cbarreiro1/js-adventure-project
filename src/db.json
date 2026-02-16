@@ -1,25 +1,28 @@
 {
     "rooms" : {
         "cockpit": {
-            "id": "cockpit",
             "name": "Cockpit",
-            "description": "You are in the cockpit with controls in your hands and see stars outside your viewport."
+            "description": "You are in the cockpit with controls in your hands and see stars outside your viewport.",
+            "exits": [
+                "controlRoom"
+            ]
         },
 
         "controlRoom": {
-            "id": "control-room",
             "name": "Control Room",
-            "description": "You are in the control room with the control console in the center with some rooms attached."
+            "description": "You are in the control room with the control console in the center with some rooms attached.",
+            "exits": [
+                "cockpit",
+                "livingQuarters"
+            ]
         },
 
         "livingQuarters": {
-            "id": "living-quarters",
             "name": "Living Quarters",
-            "description": "You are in the living quarters with a bed and a desk."
+            "description": "You are in the living quarters with a bed and a desk.",
+            "exits": [
+                "controlRoom"
+            ]
         }
     }
-}
-
-{
-    "room"
 }
