@@ -5,6 +5,10 @@
             "description": "You are in the cockpit with controls in your hands and see stars outside your viewport.",
             "exits": [
                 "controlRoom"
+            ],
+            "items": [
+                "flightManual",
+                "shipDiagnosticTool"
             ]
         },
 
@@ -14,6 +18,10 @@
             "exits": [
                 "cockpit",
                 "livingQuarters"
+            ],
+            "items": [
+                "repairTorch",
+                "laserCutter"
             ]
         },
 
@@ -22,7 +30,43 @@
             "description": "You are in the living quarters with a bed and a desk.",
             "exits": [
                 "controlRoom"
+            ],
+            "items": [
+                "dataPad",
+                "spaceSuit"
             ]
+        }
+    },
+
+    "items": {
+        "dataPad": {
+            "name": "Data Pad",
+            "description": "A data pad with some information on it."
+        },
+
+        "repairTorch": {
+            "name": "Repair Torch",
+            "description": "A repair torch used for fixing things."
+        },
+
+        "spaceSuit": {
+            "name": "Space Suit",
+            "description": "A space suit used for spacewalks."
+        },
+
+        "laserCutter": {
+            "name": "Laser Cutter",
+            "description": "A laser cutter used for cutting through metal."
+        },
+
+        "flightManual": {
+            "name": "Flight Manual",
+            "description": "A flight manual with instructions on how to operate the spaceship."
+        },
+
+        "shipDiagnosticTool": {
+            "name": "Ship Diagnostic Tool",
+            "description": "A tool used for diagnosing issues with the spaceship."
         }
     }
 }
