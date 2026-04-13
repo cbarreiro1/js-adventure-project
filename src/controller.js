@@ -1,75 +1,77 @@
 import { render, bindExitClicks, bindItemActions } from "./view.js";
-import { world } from "./model.js";
+import { world, loadWorld } from "./model.js";
 
-export function init() {
-    fetch("./db.json")
-        .then(res => res.json())
-        .then(data => {
-            world.rooms = data.rooms;
-            world.items = data.items;
-            bindExitClicks(handleExitClick);
-            bindItemActions(handleItemAction);
-            updateView();
-        })
-        .catch(err => console.error(err));
+export async function init() {
+    try {
+        // Load and build the world from db.json
+        await loadWorld();
+
+        // Bind event handlers
+        bindExitClicks(handleExitClick);
+        bindItemActions(handleItemAction);
+
+        // Initial render
+        updateView();
+    } catch (err) {
+        console.error("Failed to initialize game:", err);
+    }
 }
 
-function handleExitClick(exit) {
-    if (world.rooms[exit]) {
-        world.currentRoom = exit;
-        world.message =
-            `You are now in the ${world.rooms[exit].name}`;
+function handleExitClick(exitId) {
+    const nextRoom = world.currentRoom.getExit(exitId);
 
+    if (nextRoom) {
+        world.currentRoom = nextRoom;
+        world.currentMessage = `You are now in the ${nextRoom.name}`;
         updateView();
     }
 }
 
 function updateView() {
-    const room = world.rooms[world.currentRoom];
-
-    render(room, world.message);
+    render(world.currentRoom, world.currentMessage, world.player);
 }
 
-function handleItemAction(item, action) {
+function handleItemAction(itemId, action) {
+    const item = world.items.get(itemId);
+
+    if (!item) {
+        return;
+    }
+
     if (action === "examine") {
         examineItem(item);
-    }
-
-    if (action === "take") {
+    } else if (action === "take") {
         takeItem(item);
-    }
-
-    if (action == "use") {
+    } else if (action === "drop") {
+        dropItem(item);
+    } else if (action === "use") {
         useItem(item);
     }
 }
 
 function examineItem(item) {
-    const itemData = world.items[item];
+    world.currentMessage = item.examine(world);
+    updateView();
+}
 
-    if (itemData) {
-        world.message = itemData.description;
+function takeItem(item) {
+    // Check if item is in current room
+    if (item.parent === world.currentRoom) {
+        world.currentMessage = item.take(world);
         updateView();
     }
 }
 
-function takeItem(item) {
-    const room = world.rooms[world.currentRoom];
-
-    if (room.items.includes(item)) {
-        world.inventory.push(item);
-        room.items = room.items.filter(i => i !== item);
-        world.message = `You took the ${world.items[item].name}.`;
+function dropItem(item) {
+    // Check if item is in player inventory
+    if (item.parent === world.player) {
+        world.currentMessage = item.drop(world);
         updateView();
     }
 }
 
 function useItem(item) {
     // TODO: implement use logic
-    const itemData = world.items[item];
-
-    if (itemData) {
-        world.message = `The ${itemData.name} cannot be used at the moment.`;
-        updateView();
-    }
+    world.currentMessage = `The ${item.name} cannot be used at the moment.`;
+    updateView();
 }

@@ -7,27 +7,33 @@ const roomItemsEl = document.querySelector("#room-items");
 const messageAreaEl = document.querySelector("#message-area");
 const inventoryEl = document.querySelector("#inventory");
 
-export function render(room, message) {
+export function render(room, message, player) {
     roomNameEl.textContent = room.name;
     roomDescEl.textContent = room.description;
 
-    roomExitsEl.innerHTML = "Exits: " + room.exits
+    // Render exits using room exit IDs
+    const exitIds = room.getExitNames();
+    roomExitsEl.innerHTML = "Exits: " + exitIds
         .map(createExit)
         .join(" ");
 
-    roomItemsEl.innerHTML = "Items: " + room.items
-        .map(item => createItem(item, ["examine", "take"]))
+    // Render items in current room
+    roomItemsEl.innerHTML = "Items: " + room.contents
+        .map(item => createItem(item, item.getActions(world)))
         .join(" ");
 
     messageAreaEl.innerHTML = createMessage(message);
 
-    inventoryEl.innerHTML = world.inventory
-        .map(item => createItem(item, ["examine", "use"]))
+    // Render inventory
+    inventoryEl.innerHTML = player.contents
+        .map(item => createItem(item, item.getActions(world)))
         .join(" ");
 }
 
-function createExit(exit) {
-    return `<a href="#" data-exit="${exit}" class="exit">${world.rooms[exit].name}</a>`;
+function createExit(exitId) {
+    const exitRoom = world.currentRoom.getExit(exitId);
+    if (!exitRoom) return "";
+    return `<a href="#" data-exit="${exitId}" class="exit">${exitRoom.name}</a>`;
 }
 
 function createItem(item, actions) {
@@ -36,8 +42,8 @@ function createItem(item, actions) {
         .join("");
 
     return `
-        <div class="item-box" data-item="${item}">
-            <a href="#" class="item">${world.items[item].name}</a>
+        <div class="item-box" data-item="${item.id}">
+            <a href="#" class="item">${item.name}</a>
             <div class="item-menu" hidden>
                 ${buttons}
             </div>
